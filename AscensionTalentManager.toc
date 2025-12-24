@@ -1,7 +1,7 @@
 ## Interface: 120000
 ## Title: Ascension Talent Manager
 ## Notes: Unified Talent Management and Reminders.
-## Author: Franciscomolina
+## Author: AkaDoctorCode
 ## Version: 1.0.0
 ## SavedVariables: AscensionTalentManagerDB
 

@@ -8,6 +8,15 @@ function Manager:OnInitialize()
     AT.db.profile.manager = AT.db.profile.manager or {}
     AT.db.profile.manager.customLoadouts = AT.db.profile.manager.customLoadouts or {}
     AT.db.profile.manager.parentMapping = AT.db.profile.manager.parentMapping or {} -- [classID][specID][customName] = blizzardConfigID
+
+    -- Ensure current class/spec path exists in DB
+    local classID = select(3, UnitClass("player"))
+    local spec = GetSpecialization()
+    local specID = spec and GetSpecializationInfo(spec)
+    if classID and specID then
+        AT.db.profile.manager.customLoadouts[classID] = AT.db.profile.manager.customLoadouts[classID] or {}
+        AT.db.profile.manager.customLoadouts[classID][specID] = AT.db.profile.manager.customLoadouts[classID][specID] or {}
+    end
 end
 
 function Manager:OnEnable()

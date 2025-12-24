@@ -16,6 +16,30 @@ function Importer:OnInitialize()
     self.classAndSpecNodeCache = {}
 end
 
+function Importer:SafeMakeStream(text)
+    if not text or text == "" then return nil end
+    local success, stream = pcall(ExportUtil.MakeImportDataStream, text)
+    return success and stream or nil
+end
+
+function Importer:SafeExtract(stream, bits)
+    if not stream or not bits then return 0 end
+    local success, value = pcall(stream.ExtractValue, stream, bits)
+    if not success then
+        stream.isBroken = true
+        return 0
+    end
+    return value
+end
+
+function Importer:GetRemainingBits(stream)
+    if not stream then return 0 end
+    local success, total = pcall(stream.GetNumberOfBits, stream)
+    if not success then return 0 end
+    local current = stream.currentExtractedBits or 0
+    return total - current
+end
+
 -- Check if input is a Blizzard export string (starts with CU and long enough)
 function Importer:IsBlizzardString(text)
     return text:match("^CU") and #text > 50
@@ -70,18 +94,28 @@ function Importer:ImportFromIcyVeins(url)
 
     local segments = { string.split("-", dataSection) }
     local specIDString = segments[1]
-    if not specIDString then return nil, nil, "Invalid Icy Veins URL (missing spec segment)" end
+    if not specIDString or specIDString == "" then return nil, nil, "Invalid Icy Veins URL (missing spec segment)" end
 
-    local importStream = ExportUtil.MakeImportDataStream(specIDString)
-    local specID = tonumber(importStream:ExtractValue(ICYVEINS_SPEC_ID_WIDTH))
+    local specID = tonumber(specIDString)
+    if not specID then
+        local importStream = self:SafeMakeStream(specIDString)
+        if importStream then
+            specID = tonumber(self:SafeExtract(importStream, ICYVEINS_SPEC_ID_WIDTH))
+        end
+    end
+
     if not specID then return nil, nil, "Could not extract SpecID from URL" end
 
     local classID = C_SpecializationInfo.GetClassIDFromSpecID(specID)
-    local treeID = LibTT:GetClassTreeID(classID)
-    
-    if not treeID then return nil, nil, "Could not find talent tree for SpecID: " .. specID end
+    if not classID then 
+        -- If specID extraction was wrong (e.g. it was a ClassID), try to handle it
+        classID = specID -- Fallback if the first segment was ClassID
+    end
 
-    -- Icy Veins splits into: SpecIDString, ClassTreeString, SpecTreeString, HeroTreeString, PvPTreeString
+    local treeID = LibTT:GetClassTreeID(classID)
+    if not treeID then return nil, nil, "Could not find talent tree for Spec/Class ID: " .. specID end
+
+    -- Icy Veins segments: [1]SpecID/Class, [2]ClassTree, [3]SpecTree, [4]HeroTree
     local classString = segments[2]
     local specString = segments[3]
     local heroString = segments[4]
@@ -89,21 +123,26 @@ function Importer:ImportFromIcyVeins(url)
     -- Map selected nodes
     local classNodes, specNodes, heroNodesByTree = self:GetClassAndSpecNodeIDs(specID, treeID)
     
-    -- Parse segments
+    -- Parse segments with safety
     local selectedNodes = {}
     local levelingOrder = {}
-    self:ParseIcyVeinsSegment(classString, classNodes, selectedNodes, levelingOrder)
-    self:ParseIcyVeinsSegment(specString, specNodes, selectedNodes, levelingOrder)
     
-    -- Hero talents handling (if present)
-    if heroString then
-        local heroStream = ExportUtil.MakeImportDataStream(heroString)
-        if heroStream:GetNumberOfBits() > 0 then
-            local heroTreeIndex = heroStream:ExtractValue(1) + 1
+    if classString and classString ~= "" then
+        self:ParseIcyVeinsSegment(classString, classNodes, selectedNodes, levelingOrder)
+    end
+    if specString and specString ~= "" then
+        self:ParseIcyVeinsSegment(specString, specNodes, selectedNodes, levelingOrder)
+    end
+    
+    -- Hero talents handling
+    if heroString and heroString ~= "" then
+        local heroStream = self:SafeMakeStream(heroString)
+        if heroStream and self:GetRemainingBits(heroStream) > 0 then
+            local heroTreeIndex = self:SafeExtract(heroStream, 1) + 1
             local subTreeIDs = LibTT:GetSubTreeIDsForSpecID(specID)
             local selectedSubTreeID = subTreeIDs[heroTreeIndex]
             if selectedSubTreeID and heroNodesByTree[selectedSubTreeID] then
-                self:ParseIcyVeinsSegment(heroString, heroNodesByTree[selectedSubTreeID], selectedNodes, levelingOrder, 1) -- Skip the 1-bit header
+                self:ParseIcyVeinsSegment(heroString, heroNodesByTree[selectedSubTreeID], selectedNodes, levelingOrder, 1)
             end
         end
     end
@@ -114,14 +153,17 @@ end
 
 function Importer:ParseIcyVeinsSegment(segmentString, nodes, results, levelingOrder, bitOffset)
     if not segmentString or segmentString == "" then return end
-    local stream = ExportUtil.MakeImportDataStream(segmentString)
+    local stream = self:SafeMakeStream(segmentString)
+    if not stream then return end
     
-    if bitOffset then stream:ExtractValue(bitOffset) end
+    if bitOffset then self:SafeExtract(stream, bitOffset) end
     
     local rankByNodeID = {}
+    local safetyCount = 0
     
-    while (stream:GetNumberOfBits() - stream.currentExtractedBits) > ICYVEINS_NODE_INDEX_WIDTH do
-        local nodeIndex = stream:ExtractValue(ICYVEINS_NODE_INDEX_WIDTH) + 1
+    while self:GetRemainingBits(stream) > ICYVEINS_NODE_INDEX_WIDTH and not stream.isBroken and safetyCount < 500 do
+        safetyCount = safetyCount + 1
+        local nodeIndex = self:SafeExtract(stream, ICYVEINS_NODE_INDEX_WIDTH) + 1
         local nodeID = nodes[nodeIndex]
         
         if nodeID then
@@ -129,7 +171,7 @@ function Importer:ParseIcyVeinsSegment(segmentString, nodes, results, levelingOr
             local entryID
             
             if nodeInfo.type == Enum.TraitNodeType.Selection or nodeInfo.type == Enum.TraitNodeType.SubTreeSelection then
-                local choiceIndex = stream:ExtractValue(1) + 1
+                local choiceIndex = self:SafeExtract(stream, 1) + 1
                 entryID = nodeInfo.entryIDs[choiceIndex]
             else
                 entryID = nodeInfo.entryIDs[1]
@@ -239,33 +281,37 @@ function Importer:CreateBlizzardStringFromNodes(specID, treeID, nodes)
     return exportStream:GetExportString()
 end
 function Importer:ParseBlizzardLevelingData(mainString, levelingPart)
-    local mainStream = ExportUtil.MakeImportDataStream(mainString)
-    mainStream:ExtractValue(BIT_WIDTH_HEADER_VERSION)
-    local specID = mainStream:ExtractValue(BIT_WIDTH_SPEC_ID)
-    for i = 1, 16 do mainStream:ExtractValue(8) end -- skip hash
+    local mainStream = self:SafeMakeStream(mainString)
+    if not mainStream then return {} end
+
+    self:SafeExtract(mainStream, BIT_WIDTH_HEADER_VERSION)
+    local specID = self:SafeExtract(mainStream, BIT_WIDTH_SPEC_ID)
+    for i = 1, 16 do self:SafeExtract(mainStream, 8) end -- skip hash
 
     local classID = C_SpecializationInfo.GetClassIDFromSpecID(specID)
     local treeID = LibTT:GetClassTreeID(classID)
     local treeNodes = C_Traits.GetTreeNodes(treeID)
     
-    local levelingStream = ExportUtil.MakeImportDataStream(levelingPart)
-    levelingStream:ExtractValue(5) -- version
+    local levelingStream = self:SafeMakeStream(levelingPart)
+    if not levelingStream then return {} end
+    self:SafeExtract(levelingStream, 5) -- version
 
     -- We need to know which nodes were actually purchased in the main string
     -- to map them to the leveling ranks
     local purchased = {}
     for _, nodeID in ipairs(treeNodes) do
-        local isSelected = mainStream:ExtractValue(1) == 1
+        if mainStream.isBroken then break end
+        local isSelected = self:SafeExtract(mainStream, 1) == 1
         if isSelected then
-            local isPurchased = mainStream:ExtractValue(1) == 1
+            local isPurchased = self:SafeExtract(mainStream, 1) == 1
             if isPurchased then
                 local nodeInfo = LibTT:GetNodeInfo(nodeID)
-                local isPartiallyRanked = mainStream:ExtractValue(1) == 1
-                local ranks = isPartiallyRanked and mainStream:ExtractValue(6) or nodeInfo.maxRanks
-                local isChoice = mainStream:ExtractValue(1) == 1
+                local isPartiallyRanked = self:SafeExtract(mainStream, 1) == 1
+                local ranks = isPartiallyRanked and self:SafeExtract(mainStream, 6) or nodeInfo.maxRanks
+                local isChoice = self:SafeExtract(mainStream, 1) == 1
                 local entryID = nodeInfo.entryIDs[1]
                 if isChoice then
-                    local choiceIdx = mainStream:ExtractValue(2) + 1
+                    local choiceIdx = self:SafeExtract(mainStream, 2) + 1
                     entryID = nodeInfo.entryIDs[choiceIdx]
                 end
                 table.insert(purchased, {nodeID = nodeID, entryID = entryID, maxRanks = ranks})
@@ -275,8 +321,9 @@ function Importer:ParseBlizzardLevelingData(mainString, levelingPart)
 
     local levelingOrder = {}
     for _, info in ipairs(purchased) do
+        if levelingStream.isBroken then break end
         for rank = 1, info.maxRanks do
-            local level = levelingStream:ExtractValue(7)
+            local level = self:SafeExtract(levelingStream, 7)
             if level > 0 then
                 table.insert(levelingOrder, {
                     nodeID = info.nodeID,
@@ -285,6 +332,7 @@ function Importer:ParseBlizzardLevelingData(mainString, levelingPart)
                     level = level
                 })
             end
+            if levelingStream.isBroken then break end
         end
     end
     

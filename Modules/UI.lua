@@ -163,7 +163,8 @@ function UI:CreateInterface()
         button2 = "Cancel",
         hasEditBox = true,
         OnAccept = function(dialog)
-            local name = dialog.editBox:GetText()
+            local eb = dialog.editBox or dialog.EditBox
+            local name = eb:GetText()
             if name and name ~= "" then
                 AT.Modules.Manager:SaveCurrentAsCustom(name)
                 self:RefreshList()
@@ -180,7 +181,8 @@ function UI:CreateInterface()
         button2 = "Cancel",
         hasEditBox = true,
         OnAccept = function(dialog)
-            local text = dialog.editBox:GetText()
+            local eb = dialog.editBox or dialog.EditBox
+            local text = eb:GetText()
             StaticPopup_Show("ASCENSION_TALENTS_IMPORT_NAME_PROMPT", nil, nil, text)
         end,
         timeout = 0,
@@ -194,7 +196,8 @@ function UI:CreateInterface()
         button2 = "Cancel",
         hasEditBox = true,
         OnAccept = function(dialog, data)
-            local name = dialog.editBox:GetText()
+            local eb = dialog.editBox or dialog.EditBox
+            local name = eb:GetText()
             local text = data
             if name and name ~= "" then
                 local bStr, lOrder, err = AT.Modules.Importer:ImportFromText(text)
@@ -216,8 +219,9 @@ function UI:CreateInterface()
         button1 = "Done",
         hasEditBox = true,
         OnShow = function(dialog, data)
-            dialog.editBox:SetText(data)
-            dialog.editBox:HighlightText()
+            local eb = dialog.editBox or dialog.EditBox
+            eb:SetText(data)
+            eb:HighlightText()
         end,
         timeout = 0,
         whileDead = true,
@@ -230,7 +234,8 @@ function UI:CreateInterface()
         button2 = "Cancel",
         hasEditBox = true,
         OnAccept = function(dialog)
-            local text = dialog.editBox:GetText()
+            local eb = dialog.editBox or dialog.EditBox
+            local text = eb:GetText()
             local success, countOrErr = AT.Modules.Manager:MassImport(text)
             if success then
                 AT:Printf("Mass imported |cffffd200%d|r builds.", countOrErr)
@@ -251,12 +256,13 @@ function UI:ToggleOverlay()
         self.frame:Hide()
     else
         self.frame:Show()
-        self:RefreshList()
+        self:RefreshList(self.frame)
     end
 end
 
 function UI:SetupScrollBox(f)
     local view = CreateScrollBoxListLinearView()
+    view:SetElementExtent(32) -- Critical for Retail ScrollBox to display items
     view:SetElementInitializer("Button", function(button, data)
         button:SetSize(220, 30)
         
@@ -420,16 +426,7 @@ function UI:CreateFloatingManager()
     self.floatingFrame = f
 end
 
-function UI:ToggleOverlay()
-    if not self.frame then return end
-    if self.frame:IsShown() then
-        self.frame:Hide()
-    else
-        self.frame:Show()
-        self:RefreshList(self.frame)
-    end
-end
-
+-- Duplicate ToggleOverlay removed
 function UI:RefreshList(targetFrame)
     local f = targetFrame or self.frame
     if not f or not f:IsShown() then return end
