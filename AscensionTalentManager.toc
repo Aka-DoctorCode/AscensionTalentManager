@@ -1,0 +1,22 @@
+## Interface: 120000
+## Title: Ascension Talent Manager
+## Notes: Unified Talent Management and Reminders.
+## Author: Franciscomolina
+## Version: 1.0.0
+## SavedVariables: AscensionTalentManagerDB
+
+# Libraries
+Libs/embeds.xml
+
+# Core
+Core.lua
+
+# Modules
+Modules/Reminder.lua
+Modules/ReminderUI.lua
+Modules/Manager.lua
+Modules/AntiTaint.lua
+Modules/Importer.lua
+Modules/UI.lua
+Modules/Leveling.lua
+Modules/Options.lua
