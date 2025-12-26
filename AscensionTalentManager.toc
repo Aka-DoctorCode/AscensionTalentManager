@@ -2,7 +2,7 @@
 ## Title: Ascension Talent Manager
 ## Notes: Unified Talent Management and Reminders.
 ## Author: AkaDoctorCode
-## Version: 1.0.2
+## Version: 1.0.1
 ## SavedVariables: AscensionTalentManagerDB
 
 # Libraries
