@@ -5,5 +5,5 @@
 ## Version: 1.0.0
 ## SavedVariables: AscensionTalentDB
 
-AscensionTalentManager.lua
-AscensionTalentManagerUI.lua
+AscensionTalentManager-main.lua
+AscensionTalentManagerUI-main.lua
