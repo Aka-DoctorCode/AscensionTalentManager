@@ -1,0 +1,3 @@
+- lets give options to choose which key or mouse buttons to use to accept loadout change
+- give more than one option for each situation
+- Give keybinds for each loadout
