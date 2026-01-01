@@ -1,3 +1,8 @@
+-- Happy new year everyone!
+-- Please leave feedback to improve the add on
+-- ==========================================================
+-- AscensionTalentManager - Version 1.0.0
+-- ==========================================================
 local ADDON_NAME = "AscensionTalentManager"
 local ATS = CreateFrame("Frame")
 
