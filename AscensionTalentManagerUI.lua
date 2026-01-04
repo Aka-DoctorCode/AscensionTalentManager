@@ -1,5 +1,5 @@
 -- ==========================================================
--- ATM - Version 1.0.0
+-- AscensionTalentManager - Version 1.0.0
 -- ==========================================================
 -- Shared Constants
 local CONTEXT_LABELS = {
@@ -106,8 +106,8 @@ local function CreateSafeDropdown(parent, ctxKey, width)
     frame.UpdateSelection = function(self)
         local specID = GetSpecID()
         local val = "-"
-        if specID and ATMDB and ATMDB.perSpec[specID] then
-            val = ATMDB.perSpec[specID][ctxKey] or "-"
+        if specID and AscensionTalentManagerDB and AscensionTalentManagerDB.perSpec[specID] then
+            val = AscensionTalentManagerDB.perSpec[specID][ctxKey] or "-"
         end
         self.Text:SetText(val)
     end
@@ -136,9 +136,9 @@ local function CreateSafeDropdown(parent, ctxKey, width)
                     btn:SetScript("OnClick", function(b)
                         local selected = b.Text:GetText()
                         local specID = GetSpecID()
-                        if specID and ATMDB then
-                            if not ATMDB.perSpec[specID] then ATMDB.perSpec[specID] = {} end
-                            ATMDB.perSpec[specID][ctxKey] = (selected ~= "-") and selected or nil
+                        if specID and AscensionTalentManagerDB then
+                            if not AscensionTalentManagerDB.perSpec[specID] then AscensionTalentManagerDB.perSpec[specID] = {} end
+                            AscensionTalentManagerDB.perSpec[specID][ctxKey] = (selected ~= "-") and selected or nil
                         end
                         frame:UpdateSelection()
                         listFrame:Hide()
@@ -182,7 +182,7 @@ local function CreateConfigFrame()
 
     local title = ConfigFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightHuge")
     title:SetPoint("TOP", 0, -15)
-    title:SetText("ATM")
+    title:SetText("AscensionTalentManager")
 
     local closeBtn = CreateFrame("Button", nil, ConfigFrame, "UIPanelCloseButton")
     closeBtn:SetPoint("TOPRIGHT", -5, -5)
@@ -267,7 +267,7 @@ local function CreatePromptFrame()
         if not self.targetLoadoutID then return end
         local result = C_ClassTalents.LoadConfig(self.targetLoadoutID, true)
         if result then
-            print("|cff00ff00[ATM]|r Switching to " .. (self.targetName or "..."))
+            print("|cff00ff00[AscensionTalentManager]|r Switching to " .. (self.targetName or "..."))
             local specID = GetSpecID()
             if specID and C_ClassTalents.UpdateLastSelectedSavedConfigID then
                 C_ClassTalents.UpdateLastSelectedSavedConfigID(specID, self.targetLoadoutID)

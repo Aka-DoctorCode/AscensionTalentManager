@@ -1,7 +1,7 @@
 -- ==========================================================
--- ATM - Version 1.0.0
+-- AscensionTalentManager - Version 1.0.0
 -- ==========================================================
-local ADDON_NAME = "ATM"
+local ADDON_NAME = "AscensionTalentManager"
 local ATS = CreateFrame("Frame")
 
 -- Default settings
@@ -13,20 +13,20 @@ local DEFAULTS = {
 
 -- Database handling
 local function EnsureDB()
-    if type(ATMDB) ~= "table" then
-        ATMDB = {}
+    if type(AscensionTalentManagerDB) ~= "table" then
+        AscensionTalentManagerDB = {}
     end
     for k, v in pairs(DEFAULTS) do
-        if ATMDB[k] == nil then
-            ATMDB[k] = v
+        if AscensionTalentManagerDB[k] == nil then
+            AscensionTalentManagerDB[k] = v
         end
     end
 end
 
 -- Logging
 local function Log(msg, ...)
-    if ATMDB and ATMDB.debug then
-        print("|cff00ccff[ATM]|r:", msg, ...)
+    if AscensionTalentManagerDB and AscensionTalentManagerDB.debug then
+        print("|cff00ccff[AscensionTalentManager]|r:", msg, ...)
     end
 end
 
@@ -111,7 +111,7 @@ local lastContextSignature = nil
 
 local function CheckAndPromptSwitch(force)
     -- 1. Ensure DB exists before reading 'enabled'
-    if not ATMDB or not ATMDB.enabled then return end
+    if not AscensionTalentManagerDB or not AscensionTalentManagerDB.enabled then return end
     if not CanSwapTalents() then return end
 
     local context = GetCurrentContext()
@@ -123,16 +123,16 @@ local function CheckAndPromptSwitch(force)
     if not specID then return end
 
     -- 3. Robust nil check for nested table initialization
-    if not ATMDB.perSpec then
-        ATMDB.perSpec = {}
+    if not AscensionTalentManagerDB.perSpec then
+        AscensionTalentManagerDB.perSpec = {}
     end
 
-    if not ATMDB.perSpec[specID] then
-        ATMDB.perSpec[specID] = {}
+    if not AscensionTalentManagerDB.perSpec[specID] then
+        AscensionTalentManagerDB.perSpec[specID] = {}
     end
-    -- ATMDB.perSpec[specID] = ATMDB.perSpec[specID] or {}
+    -- AscensionTalentManagerDB.perSpec[specID] = AscensionTalentManagerDB.perSpec[specID] or {}
 
-    local desiredLoadoutName = ATMDB.perSpec[specID][context]
+    local desiredLoadoutName = AscensionTalentManagerDB.perSpec[specID][context]
     if not desiredLoadoutName or desiredLoadoutName == "" or desiredLoadoutName == "-" then return end
 
     local activeID, activeName = GetActiveLoadout()
@@ -174,19 +174,19 @@ ATS:SetScript("OnEvent", function(self, event, ...)
 end)
 
 -- Slash Commands
-SLASH_ATMS1 = "/ats"
-SLASH_ATMS2 = "/ATMs"
+SLASH_AscensionTalentManagerS1 = "/ats"
+SLASH_AscensionTalentManagerS2 = "/AscensionTalentManagers"
 
-SlashCmdList["ATMS"] = function(msg)
+SlashCmdList["AscensionTalentManagerS"] = function(msg)
     local cmd = msg:lower()
     if cmd == "debug" then
-        if ATMDB then
-            ATMDB.debug = not ATMDB.debug
-            print("ATM Debug:", ATMDB.debug)
+        if AscensionTalentManagerDB then
+            AscensionTalentManagerDB.debug = not AscensionTalentManagerDB.debug
+            print("AscensionTalentManager Debug:", AscensionTalentManagerDB.debug)
         end
     elseif cmd == "check" then
         lastContextSignature = nil
-        print("ATM: Checking talents...")
+        print("AscensionTalentManager: Checking talents...")
         CheckAndPromptSwitch(true)
     else
         if ATS_ToggleConfig then ATS_ToggleConfig() end
