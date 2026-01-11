@@ -1,8 +1,11 @@
+local ADDON_NAME, private = ...
 -- ==========================================================
--- AscensionTalentManager - Version 1.0.0
+-- AscensionTalentManager - Core
 -- ==========================================================
-local ADDON_NAME = "AscensionTalentManager"
-local ATS = CreateFrame("Frame")
+
+-- Initialize the shared Core frame in the private namespace
+private.Core = CreateFrame("Frame")
+local ATS = private.Core
 
 -- Default settings
 local DEFAULTS = {
@@ -30,7 +33,7 @@ local function Log(msg, ...)
     end
 end
 
--- Wrapper de Compatibilidad para WoW 11.0.7+
+-- Compatibility Wrapper for WoW 11.0.7+
 local function GetConfigInfo(configID)
     if not configID then return nil end
     if C_Traits and C_Traits.GetConfigInfo then
@@ -69,13 +72,14 @@ end
 local function GetActiveLoadout()
     local specIndex = GetSpecialization()
     if not specIndex then return nil, nil end
+    
     local specID = GetSpecializationInfo(specIndex)
     if not specID then return nil, nil end
 
-    -- Intentamos obtener el ID activo real
+    -- Attempt to get the real active ID
     local activeConfigID = C_ClassTalents.GetActiveConfigID()
 
-    -- Si es nil (por cambios sin guardar), usamos el último guardado conocido
+    -- If nil (due to unsaved changes), use the last known saved config
     if not activeConfigID then
         activeConfigID = C_ClassTalents.GetLastSelectedSavedConfigID(specID)
     end
@@ -89,16 +93,19 @@ end
 
 local function FindLoadoutIDByName(targetName)
     if not targetName or targetName == "" then return nil end
+    
     local specIndex = GetSpecialization()
     if not specIndex then return nil end
+    
     local specID = GetSpecializationInfo(specIndex)
+    if not specID then return nil end
 
     local configIDs = C_ClassTalents.GetConfigIDsBySpecID(specID)
     if not configIDs then return nil end
 
     for _, configID in ipairs(configIDs) do
         local info = GetConfigInfo(configID)
-        -- Comparamos nombres ignorando mayúsculas/minúsculas
+        -- Compare names ignoring case
         if info and info.name and string.lower(info.name) == string.lower(targetName) then
             return configID
         end
@@ -111,7 +118,9 @@ local lastContextSignature = nil
 
 local function CheckAndPromptSwitch(force)
     -- 1. Ensure DB exists before reading 'enabled'
-    if not AscensionTalentManagerDB or not AscensionTalentManagerDB.enabled then return end
+    if not AscensionTalentManagerDB then return end
+    if not AscensionTalentManagerDB.enabled then return end
+    
     if not CanSwapTalents() then return end
 
     local context = GetCurrentContext()
@@ -130,7 +139,6 @@ local function CheckAndPromptSwitch(force)
     if not AscensionTalentManagerDB.perSpec[specID] then
         AscensionTalentManagerDB.perSpec[specID] = {}
     end
-    -- AscensionTalentManagerDB.perSpec[specID] = AscensionTalentManagerDB.perSpec[specID] or {}
 
     local desiredLoadoutName = AscensionTalentManagerDB.perSpec[specID][context]
     if not desiredLoadoutName or desiredLoadoutName == "" or desiredLoadoutName == "-" then return end
@@ -138,20 +146,21 @@ local function CheckAndPromptSwitch(force)
     local activeID, activeName = GetActiveLoadout()
     local desiredID = FindLoadoutIDByName(desiredLoadoutName)
 
-    if not desiredID then return end -- Loadout no existe (borrado o renombrado)
+    if not desiredID then return end -- Loadout does not exist (deleted or renamed)
 
-    -- Si ya estamos en el loadout deseado, no hacer nada
+    -- If we are already in the desired loadout, do nothing
     if activeID == desiredID and not force then return end
 
-    -- Evitar spam del prompt si ya se mostró para esta situación
+    -- Prevent prompt spam if it was already shown for this situation
     local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
     local currentSignature = string.format("%s:%s:%s", context, tostring(mapID), tostring(desiredID))
 
     if not force and lastContextSignature == currentSignature then return end
     lastContextSignature = currentSignature
 
-    if ATS_ShowSwitchPrompt then
-        ATS_ShowSwitchPrompt(context, activeName, desiredLoadoutName, desiredID)
+    -- Use the function from the private namespace
+    if private.ShowSwitchPrompt then
+        private.ShowSwitchPrompt(context, activeName, desiredLoadoutName, desiredID)
     end
 end
 
@@ -165,7 +174,8 @@ ATS:RegisterEvent("PLAYER_REGEN_ENABLED")
 ATS:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         EnsureDB()
-        if ATS_InitUI then ATS_InitUI() end
+        -- Call InitUI from private namespace
+        if private.InitUI then private.InitUI() end
     elseif event == "PLAYER_REGEN_ENABLED" then
         C_Timer.After(0.5, function() CheckAndPromptSwitch(false) end)
     else
@@ -189,6 +199,7 @@ SlashCmdList["AscensionTalentManagerS"] = function(msg)
         print("AscensionTalentManager: Checking talents...")
         CheckAndPromptSwitch(true)
     else
-        if ATS_ToggleConfig then ATS_ToggleConfig() end
+        -- Call ToggleConfig from private namespace
+        if private.ToggleConfig then private.ToggleConfig() end
     end
 end

@@ -1,5 +1,6 @@
+local ADDON_NAME, private = ...
 -- ==========================================================
--- AscensionTalentManager - Version 1.0.0
+-- AscensionTalentManager - UI
 -- ==========================================================
 -- Shared Constants
 local CONTEXT_LABELS = {
@@ -104,12 +105,21 @@ local function CreateSafeDropdown(parent, ctxKey, width)
     frame.List = listFrame
 
     frame.UpdateSelection = function(self)
+        -- POINT 5: Enhanced Safety Checks (Validation)
+        -- We explicitly check every step of the table hierarchy to avoid errors
         local specID = GetSpecID()
         local val = "-"
-        if specID and AscensionTalentManagerDB and AscensionTalentManagerDB.perSpec[specID] then
+        
+        if specID 
+        and AscensionTalentManagerDB 
+        and AscensionTalentManagerDB.perSpec 
+        and AscensionTalentManagerDB.perSpec[specID] then
             val = AscensionTalentManagerDB.perSpec[specID][ctxKey] or "-"
         end
-        self.Text:SetText(val)
+        
+        if self.Text then
+            self.Text:SetText(val)
+        end
     end
 
     frame:SetScript("OnClick", function(self)
@@ -137,7 +147,10 @@ local function CreateSafeDropdown(parent, ctxKey, width)
                         local selected = b.Text:GetText()
                         local specID = GetSpecID()
                         if specID and AscensionTalentManagerDB then
+                            -- Ensure nested tables exist before writing
+                            if not AscensionTalentManagerDB.perSpec then AscensionTalentManagerDB.perSpec = {} end
                             if not AscensionTalentManagerDB.perSpec[specID] then AscensionTalentManagerDB.perSpec[specID] = {} end
+                            
                             AscensionTalentManagerDB.perSpec[specID][ctxKey] = (selected ~= "-") and selected or nil
                         end
                         frame:UpdateSelection()
@@ -167,8 +180,14 @@ local function CreateConfigFrame()
     ConfigFrame:SetMovable(true)
     ConfigFrame:EnableMouse(true)
     ConfigFrame:RegisterForDrag("LeftButton")
-    ConfigFrame:SetScript("OnDragStart", ConfigFrame.StartMoving)
-    ConfigFrame:SetScript("OnDragStop", ConfigFrame.StopMovingOrSizing)
+    
+    -- Wrapped in anonymous function to prevent 'ScriptRegion' errors
+    ConfigFrame:SetScript("OnDragStart", function(self) 
+        self:StartMoving() 
+    end)
+    ConfigFrame:SetScript("OnDragStop", function(self) 
+        self:StopMovingOrSizing() 
+    end)
 
     ConfigFrame:SetBackdrop({
         bgFile = "Interface/Buttons/WHITE8x8",
@@ -208,7 +227,8 @@ local function CreateConfigFrame()
     ConfigFrame:Hide()
 end
 
-function ATS_ToggleConfig()
+-- Exported to private namespace instead of global
+function private.ToggleConfig()
     if not ConfigFrame then CreateConfigFrame() end
     if ConfigFrame:IsShown() then ConfigFrame:Hide() else ConfigFrame:Show() end
 end
@@ -219,7 +239,6 @@ end
 
 local function CreatePromptFrame()
     PromptFrame = CreateFrame("Frame", "ATS_PromptFrame", UIParent, "BackdropTemplate")
-    -- FIXED: We give it a default size so it is not invisible (0x0)
     PromptFrame:SetSize(350, 100) 
     PromptFrame:SetPoint("TOP", 0, -200)
     PromptFrame:SetFrameStrata("DIALOG")
@@ -287,7 +306,8 @@ local function CreatePromptFrame()
     PromptFrame:Hide()
 end
 
-function ATS_ShowSwitchPrompt(context, currentName, desiredName, desiredID)
+-- Exported to private namespace instead of global
+function private.ShowSwitchPrompt(context, currentName, desiredName, desiredID)
     if not PromptFrame then CreatePromptFrame() end
 
     PromptFrame.targetLoadoutID = desiredID
@@ -304,21 +324,20 @@ function ATS_ShowSwitchPrompt(context, currentName, desiredName, desiredID)
     PromptFrame.Icon:SetTexture(specIcon or "Interface/Icons/INV_Misc_QuestionMark")
 
     -- DYNAMIC SIZING LOGIC
-    -- Now that text is set, we calculate how tall the frame needs to be
     local titleHeight = PromptFrame.Title:GetStringHeight()
     local subHeight = PromptFrame.SubText:GetStringHeight()
     
-    -- Base height covers Icon(50) + margins, OR Text + margins.
     -- Formula: TopMargin(20) + Title(var) + Gap(4) + SubText(var) + BottomMargin(30)
     local calculatedHeight = 20 + titleHeight + 4 + subHeight + 30
     
-    -- Enforce a minimum height so it doesn't look smaller than the Icon
+    -- Enforce a minimum height
     if calculatedHeight < 90 then calculatedHeight = 90 end
     
     PromptFrame:SetHeight(calculatedHeight)
     PromptFrame:Show()
 end
 
-function ATS_InitUI()
-    -- Hook
+-- Exported to private namespace
+function private.InitUI()
+    -- Reserved for future init logic
 end
