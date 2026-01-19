@@ -1,0 +1,3 @@
+## Version: 1.0.6
+- I have been bussy with LEMIX and other projects, so I haven't been able to update AscensionBars in a while. I will prepare a new update soon.
+- There are new project on the oven as well, but I will wait for 12.0 to launch before working on them.
