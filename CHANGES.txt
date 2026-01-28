@@ -1,3 +1,12 @@
-## Version: 1.0.6
-- I have been bussy with LEMIX and other projects, so I haven't been able to update AscensionBars in a while. I will prepare a new update soon.
-- There are new project on the oven as well, but I will wait for 12.0 to launch before working on them.
+lightweight tag 2ceb9fb863b3750724c658a79bd85e9e73ff1385 V1.0.8
+Author:	Aka-DoctorCode <37858279+Aka-DoctorCode@users.noreply.github.com>
+Date:	Fri Jan 23 09:47:01 2026 -0400
+
+commit 2ceb9fb863b3750724c658a79bd85e9e73ff1385
+Author: Aka-DoctorCode <37858279+Aka-DoctorCode@users.noreply.github.com>
+Date:   Fri Jan 23 09:47:01 2026 -0400
+
+    License change
+    
+    License change to all right reserved
+
