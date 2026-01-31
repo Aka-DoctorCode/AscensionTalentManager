@@ -1,23 +1,48 @@
 # Ascension Talent Manager
 
-Is a simple, minimalistic and context-aware add on to manage your talents in retail **World of Warcraft**.
+Ascension Talent Manager is a lightweight, context-aware World of Warcraft addon designed to ensure you always have the optimal talent loadout for your current activity. 
 
-It automatically detects the "context" (type of zone) you are entering (Open World, Dungeon, Raid, Delve, or PvP) and prompts you to change to your active talent loadout for that specific activity.
-
-Designed to be lightweight and non-intrusive, it ensures you never start a fight without the right talents.
+Whether you are entering a Mythic+ dungeon, a raid, or simply exploring the open world, the addon detects the transition and prompts you to switch to your preferred setup instantly.
 
 ---
 
 ## Key Features
 
-* **Context Awareness:** Automatically detects where you are (Dungeon, Raid, Open World, etc.).
-* **Non-Intrusive:** Prompts to press "ENTER" to switch, or ESC to ignore.
-* **Minimalist UI:** A clean, dark-themed, simple configuration; just select your loadouts for each context and forget about it.
+* **Context Awareness:** Automatically detects your environment, including:
+    * Open World
+    * Dungeons (Normal, Heroic, Mythic+)
+    * Raids
+    * Delves
+    * PvP (Arenas and Battlegrounds)
+* **Non-Intrusive Workflow:** When a new context is detected, a simple prompt appears. Press ENTER to switch loadouts or ESC to ignore.
+* **Minimalist UI:** A clean, dark-themed configuration menu designed for efficiency. Assign your preferences once and the addon handles the rest.
+* **Modern API:** Fully compatible with World of Warcraft talent systems (Retail).
 
-![UI](https://media.forgecdn.net/attachments/1451/685/menu-and-pop-up-png-png.png)
+---
+
+## Preview
+
+![UI Preview](https://media.forgecdn.net/attachments/1451/685/menu-and-pop-up-png-png.png)
 
 ---
 
 ## Usage
 
-Open the configuration panel using the command `/ats` or `/ascensiontalents`.
+To open the configuration panel and assign your talent loadouts to specific contexts, use either of the following slash commands:
+
+* `/ats`
+* `/ascensiontalents`
+
+---
+
+## Installation
+
+1. Download the latest release.
+2. Extract the AscensionTalentManager folder into your World of Warcraft/_retail_/Interface/AddOns directory.
+3. Restart the game or reload your UI (/reload).
+
+---
+
+## License
+
+Distributed under the MIT License. See LICENSE for more information.
