@@ -1,14 +1,13 @@
-# Define el nombre de la carpeta en el ZIP final
 package-as: AscensionTalentManager
-
-# Como no usas librerías externas (Ace3, etc.), no necesitamos versiones "nolib"
 enable-nolib-creation: no
+license-output: LICENSE
+# manual-changelog: cambios.txt
 
-# Lista de archivos que están en tu proyecto pero NO quieres en el ZIP final de CurseForge
 ignore:
-    - .git
-    - .gitignore
-    - .pkgmeta
     - .TalentSwitchReminder
     - .Libs
     - .vscode
+    - .gitignore
+    - .gitattributes
+    - "*.md"
+    - "*.txt"

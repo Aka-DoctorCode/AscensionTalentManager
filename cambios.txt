@@ -1,0 +1,28 @@
+- lets give options to choose which key or mouse buttons to use to accept loadout change
+- give more than one option for each situation
+- Give keybinds for each loadoutgive
+
+Aquí tienes la lista de las sugerencias que te propuse anteriormente pero que **aún no se han implementado** en el código actual:
+
+1. **Automatización (Auto-Switch):**
+* **Qué es:** Añadir una opción en la configuración (un *checkbox*) para que el addon cambie los talentos automáticamente sin mostrar la ventana de confirmación (`PromptFrame`), siempre y cuando no estés en combate.
+* **Estado:** Actualmente el addon siempre pregunta antes de cambiar.
+
+
+2. **Keybindings (Atajos de Teclado):**
+* **Qué es:** Crear un archivo `Bindings.xml` para permitir que los usuarios asignen una tecla específica (desde el menú de opciones de WoW) para abrir/cerrar la configuración del addon, en lugar de tener que escribir `/ats`.
+* **Estado:** Actualmente solo se puede abrir vía comando de chat.
+
+
+3. **Mejora en la Detección de Instancias (Delves y Legacy):**
+* **Qué es:** Refinar la función `GetCurrentContext`.
+* Para **Delves (Profundidades):** Validar el `difficultyID` además del tipo de instancia, ya que a veces se confunden con escenarios normales.
+* Para **Raid Farming:** Añadir una comprobación de nivel (ej. si el jugador es 10 niveles mayor que la raid) para asegurar que es contenido "Legacy", además de comprobar el modo de botín.
+
+
+* **Estado:** Se usa una lógica básica que podría fallar en casos borde de *The War Within*.
+
+
+4. **Uso de Librerías (Ace3) - *Opcional*:**
+* **Qué es:** Reescribir la gestión de base de datos y la interfaz de configuración usando librerías estándar como `AceConfig` y `AceDB`.
+* **Estado:** Actualmente todo el manejo de ventanas y base de datos está hecho "a mano" (Vanilla), lo cual es válido pero requiere más mantenimiento si el addon crece.

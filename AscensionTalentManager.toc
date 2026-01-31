@@ -2,9 +2,9 @@
 ## Title: Ascension Talent Manager
 ## Notes: Automatically manages talent loadouts based on context.
 ## Author: AkaDoctorCode
-## Version: 10
+## Version: 12
 ## SavedVariables: AscensionTalentManagerDB
-## IconTexture: Interface\AddOns\AscensionNotes\Media\AkaDoctorCode.png
+## IconTexture: Interface\AddOns\AscensionTalentManager\Media\AkaDoctorCode.png
 
 Core.lua
 UI.lua
