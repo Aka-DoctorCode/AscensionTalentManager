@@ -1,4 +1,4 @@
-package-as: AscensionSuit
+package-as: AscensionTalentManager
 
 enable-nolib-creation: no
 
