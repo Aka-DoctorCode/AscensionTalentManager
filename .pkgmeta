@@ -1,13 +1,12 @@
-package-as: AscensionTalentManager
+package-as: AscensionSuit
+
 enable-nolib-creation: no
-license-output: LICENSE
-# manual-changelog: cambios.txt
 
 ignore:
-    - .TalentSwitchReminder
-    - .Libs
-    - .vscode
+    - .git
     - .gitignore
-    - .gitattributes
-    - "*.md"
-    - "*.txt"
+    - .vscode
+    - .pkgmeta
+    - __MACOSX
+    - .DS_Store
+    - cambios.txt

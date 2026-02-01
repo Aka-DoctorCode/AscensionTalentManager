@@ -225,23 +225,16 @@ ATS:SetScript("OnEvent", function(self, event, ...)
     end
 end)
 
+-- ==========================================================
 -- Slash Commands
-SLASH_AscensionTalentManagerS1 = "/atm"
-SLASH_AscensionTalentManagerS2 = "/AscensionTalentManagers"
+-- ==========================================================
+-- Definitions for the command aliases
+SLASH_AscensionTalentManager1 = "/atm"
 
--- SlashCmdList["AscensionTalentManagerS"] = function(msg)
---     local cmd = msg:lower()
---     if cmd == "debug" then
---         if AscensionTalentManagerDB then
---             AscensionTalentManagerDB.debug = not AscensionTalentManagerDB.debug
---             print("AscensionTalentManager Debug:", AscensionTalentManagerDB.debug)
---         end
---     elseif cmd == "check" then
---         lastContextSignature = nil
---         print("AscensionTalentManager: Checking talents...")
---         CheckAndPromptSwitch(true)
---     else
---         -- Call ToggleConfig from private namespace
---         if private.ToggleConfig then private.ToggleConfig() end
---     end
--- end
+-- The key "AscensionTalentManager" must match the suffix of the variables above
+SlashCmdList["AscensionTalentManager"] = function()
+    -- Directly toggle the configuration UI
+    if private.ToggleConfig then 
+        private.ToggleConfig() 
+    end
+end
