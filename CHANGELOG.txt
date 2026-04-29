@@ -1,0 +1,6 @@
+<h1>@project-version@</h1>
+<ul>
+    <li>Wago initial release</li>
+</ul>
+<br>
+<h3>Positive feedback is always appreciated, it helps me to continue working on this project</h3>
