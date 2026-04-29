@@ -1,16 +1,11 @@
-## Interface: 120005
+## Interface: 120001
 ## Title: Ascension Talent Manager
-## Notes: Unified talent management and swapping.
+## Notes: Automatically manages talent loadouts based on context.
 ## Author: AkaDoctorCode
-## Category: Utility
-## Version: @project-version@
+## Version: 16
 ## SavedVariables: AscensionTalentManagerDB
 ## IconTexture: Interface\AddOns\AscensionTalentManager\Media\AkaDoctorCode.png
-## X-Curse-Project-ID: 1419829
-## X-Wago-ID: aNebdW62
 
-# Core
 Core.lua
-
-# UI
 UI.lua
+Test.lua
