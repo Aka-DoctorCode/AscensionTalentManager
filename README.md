@@ -1,6 +1,9 @@
 # Ascension Talent Manager
 
-## Work in progress
+**Version @project-version@**
+* Improved talent loading reliability.
+* Fixed UI apply button bugs.
+* Optimized code for better performance.
 
 ***
 
@@ -22,8 +25,6 @@ Open the configuration panel using the command `/ats` or `/ascensiontalents`.
 * **Non-Intrusive:** Prompts to press "ENTER" to switch, or ESC to ignore.
 * **Minimalist UI:** A clean, dark-themed, simple configuration; just select your loadouts for each context and forget about it.
 
-![UI](https://media.forgecdn.net/attachments/1451/685/menu-and-pop-up-png-png.png)
-
 ***
 
 Es un complemento sencillo, minimalista y sensible al contexto para gestionar tus talentos en **World of Warcraft**.
@@ -43,7 +44,5 @@ Abre el panel de configuración con el comando `/ats` o `/ascensiontalents`.
 * **Conciencia del contexto:** detecta automáticamente dónde te encuentras (calabozo, incursión, mundo abierto, etc.).
 * **No intrusivo:** te pide que pulses «ENTER» para cambiar o ESC para ignorar.
 * **Interfaz de usuario minimalista:** una configuración limpia, sencilla y con tema oscuro; solo tienes que seleccionar tus equipamientos para cada contexto y olvidarte de ello.
-
-![Interfaz de usuario](https://media.forgecdn.net/attachments/1451/685/menu-and-pop-up-png-png.png)
 
 ***

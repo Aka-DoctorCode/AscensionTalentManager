@@ -1,6 +1,10 @@
 <h1>@project-version@</h1>
 <ul>
-    <li>Standardized method of uploading the addon to Curseforge and Wago</li>
+    <li>Fixed talent loadout not changing properly.</li>
+    <li>Fixed UI Apply button getting stuck.</li>
+    <li>Code optimized using native WoW functions.</li>
+    <li>Debug prints hidden by default.</li>
+    <li>Cleaned up dead code.</li>
 </ul>
 <br>
 <h2>Positive feedback is always appreciated, it helps me to continue working on this project</h2>
