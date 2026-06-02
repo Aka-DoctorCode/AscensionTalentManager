@@ -1,6 +1,6 @@
 # Ascension Talent Manager
 
-**Version @project-version@**
+**Version V18**
 * Improved talent loading reliability.
 * Fixed UI apply button bugs.
 * Optimized code for better performance.

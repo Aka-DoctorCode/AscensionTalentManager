@@ -1,4 +1,4 @@
-<h1>@project-version@</h1>
+<h1>V18</h1>
 <ul>
     <li>Fixed talent loadout not changing properly.</li>
     <li>Fixed UI Apply button getting stuck.</li>
