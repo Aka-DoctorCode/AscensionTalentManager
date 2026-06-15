@@ -1,9 +1,9 @@
-## Interface: 120005
+## Interface: 120007
 ## Title: Ascension Talent Manager
 ## Notes: Unified talent management and swapping.
 ## Author: AkaDoctorCode
 ## Category: Utility
-## Version: V17
+## Version: @project-version@
 ## SavedVariables: AscensionTalentManagerDB
 ## IconTexture: Interface\AddOns\AscensionTalentManager\Media\AkaDoctorCode.png
 ## X-Curse-Project-ID: 1419829
