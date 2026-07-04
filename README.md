@@ -1,9 +1,6 @@
-# Ascension Talent Manager
+[![Discord](https://img.shields.io/badge/Discord-Join_Community-5865F2?style=for-the-badge&logo=discord&logoColor=5865F2)](https://discord.gg/GaYzvYr7F) ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1419829?style=for-the-badge&color=4900C2) ![CurseForge Version](https://img.shields.io/curseforge/v/1419829?style=for-the-badge&color=4900C2) ![CurseForge Game Versions](https://img.shields.io/curseforge/game-versions/1419829?style=for-the-badge&color=4900C2) [![](https://img.shields.io/badge/Donate-F0B90B?style=for-the-badge)](https://aka-doctorcode.github.io/DonationAddresses/)
 
-**Version V18**
-* Improved talent loading reliability.
-* Fixed UI apply button bugs.
-* Optimized code for better performance.
+# Ascension Talent Manager
 
 ***
 
@@ -17,13 +14,13 @@ Designed to be lightweight and non-intrusive, it ensures you never start a fight
 
 ## How to use it?
 
-Open the configuration panel using the command `/ats` or `/ascensiontalents`.
+Open the configuration panel using the command `/atm`
 
 ## Key Features
 
-* **Context Awareness:** Automatically detects where you are (Dungeon, Raid, Open World, etc.).
-* **Non-Intrusive:** Prompts to press "ENTER" to switch, or ESC to ignore.
-* **Minimalist UI:** A clean, dark-themed, simple configuration; just select your loadouts for each context and forget about it.
+*   **Context Awareness:** Automatically detects where you are (Dungeon, Raid, Open World, etc.).
+*   **Non-Intrusive:** Prompts to press "ENTER" to switch, or ESC to ignore.
+*   **Minimalist UI:** A clean, dark-themed, simple configuration; just select your loadouts for each context and forget about it.
 
 ***
 
@@ -37,12 +34,12 @@ Diseñado para ser ligero y no intrusivo, te garantiza que nunca empezarás una 
 
 ## ¿Cómo se utiliza?
 
-Abre el panel de configuración con el comando `/ats` o `/ascensiontalents`.
+Abre el panel de configuración con el comando `/atm`
 
 ## Características principales
 
-* **Conciencia del contexto:** detecta automáticamente dónde te encuentras (calabozo, incursión, mundo abierto, etc.).
-* **No intrusivo:** te pide que pulses «ENTER» para cambiar o ESC para ignorar.
-* **Interfaz de usuario minimalista:** una configuración limpia, sencilla y con tema oscuro; solo tienes que seleccionar tus equipamientos para cada contexto y olvidarte de ello.
+*   **Conciencia del contexto:** detecta automáticamente dónde te encuentras (calabozo, incursión, mundo abierto, etc.).
+*   **No intrusivo:** te pide que pulses «ENTER» para cambiar o ESC para ignorar.
+*   **Interfaz de usuario minimalista:** una configuración limpia, sencilla y con tema oscuro; solo tienes que seleccionar tus equipamientos para cada contexto y olvidarte de ello.
 
 ***
