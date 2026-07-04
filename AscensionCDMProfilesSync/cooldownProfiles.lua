@@ -197,7 +197,8 @@ function addon:refreshCooldownViewerUI(profileData, profileName)
     end
 
 
-    local eventFrame = CreateFrame("Frame")
+    local eventFrame
+    eventFrame = CreateFrame("Frame")
     eventFrame:RegisterEvent("COOLDOWN_VIEWER_DATA_LOADED")
     C_Timer.After(0.05, function()
         if EventUtil and EventUtil.GenerateFrameEvent then
@@ -274,7 +275,7 @@ function addon:ToggleCooldownProfilesMenu(anchor)
                 rootDescription:CreateTitle("Cooldown Profiles")
                 
                 for name, data in pairs(profiles) do
-                    local profileMenu = rootDescription:CreateButton(name)
+                    local profileMenu = rootDescription:CreateButton(name, function() end)
                     
                     profileMenu:CreateButton("Load", function()
                         addon:LoadCooldownProfile(name)
